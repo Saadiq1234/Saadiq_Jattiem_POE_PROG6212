@@ -1,0 +1,45 @@
+﻿<Window x:Class="Saadiq_Jattiem_POE.ProgrammeCoordinatorDashboard"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Saadiq_Jattiem_POE"
+        mc:Ignorable="d"
+        Title="ProgrammeCoordinatorDashboard" Height="450" Width="800">
+    <Grid Background="#FF579ED4">
+        <!-- Title for the page -->
+        <TextBlock Text="Claims Overview" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,20,0,0"/>
+
+        <!-- ListView to display claims with necessary details -->
+        <ListView x:Name="ClaimsListView" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="20,60,20,140" SelectionMode="Single">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Class Taught" Width="150" DisplayMemberBinding="{Binding ClassTaught}"/>
+                    <GridViewColumn Header="Total Amount" Width="100" DisplayMemberBinding="{Binding TotalAmount}"/>
+                    <GridViewColumn Header="Hours Worked" Width="100" DisplayMemberBinding="{Binding NumberOfSessions}"/>
+                    <GridViewColumn Header="Status" Width="100" DisplayMemberBinding="{Binding ClaimStatus}"/>
+                    <GridViewColumn Header="Supporting Documents" Width="150">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <Button Content="Download" Click="DownloadDocument_Click"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <!-- Buttons for manual processing -->
+        <Button Content="Approve" Width="80" Height="30" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="20,0,0,20" Click="ApproveButton_Click"/>
+        <Button Content="Reject" Width="80" Height="30" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="120,0,0,20" Click="RejectButton_Click"/>
+        <Button Content="Pending" Width="80" Height="30" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="220,0,0,20" Click="PendingButton_Click"/>
+
+        <!-- Automation trigger -->
+        <Button Content="Run Automation" Width="120" Height="30" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,20,20" Click="RunAutomationButton_Click"/>
+
+        <!-- Feedback or error messages -->
+        <TextBlock x:Name="ValidationFeedbackText" Foreground="Red" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,60"/>
+    </Grid>
+</Window>

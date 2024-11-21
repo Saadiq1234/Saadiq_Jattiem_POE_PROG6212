@@ -1,0 +1,22 @@
+﻿<Window x:Class="Saadiq_Jattiem_POE.SupportingDocs"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Saadiq_Jattiem_POE"
+        mc:Ignorable="d"
+        Title="SupportingDocs" Height="450" Width="800">
+    <Grid Background="#FF579ED4">
+        <!-- Class taught label and text box -->
+        <TextBlock Text="Class Taught:" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,40,0,0"/>
+        <TextBox x:Name="ClassTaughtTextBox" Width="300" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="120,40,0,0"/>
+
+        <!-- Document upload -->
+        <TextBlock Text="Supporting Documents:" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,90,0,0"/>
+        <Button Content="Upload Document" Width="150" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,90,0,0" Click="UploadDocument_Click"/>
+
+        <!-- Buttons -->
+        <Button Content="Submit" Width="100" Height="30" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,30,20" Click="SubmitButton_Click"/>
+        <Button Content="Cancel" Width="100" Height="30" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="30,0,0,20" Click="CancelButton_Click"/>
+    </Grid>
+</Window>
