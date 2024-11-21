@@ -4,13 +4,12 @@ using System.Windows;
 
 namespace Saadiq_Jattiem_POE
 {
-    //Logic behind allowing users to update their claims information
     public partial class EditClaim : Window
     {
-        //connect to the database
-        public string connectionString = "Data Source=labg9aeb3\\sqlexpress01;Initial Catalog=POE;Integrated Security=True;Encrypt=True;Trust Server Certificate=True";
-        public int claimID;
-        public decimal sessionCost = 105; // Example cost per session
+        // Database connection string
+        private readonly string connectionString = "Data Source=labg9aeb3\\sqlexpress01;Initial Catalog=POE_2;Integrated Security=True;TrustServerCertificate=True;";
+        private readonly int claimID;
+        private readonly decimal sessionCost = 105; // Example cost per session
 
         public EditClaim(int claimID)
         {
@@ -19,15 +18,15 @@ namespace Saadiq_Jattiem_POE
             LoadClaimDetails();
         }
 
-        //updated the information in the claims so that the total amount is updated and displayed based on the total sessions
+        // Load claim details into the form
         public void LoadClaimDetails()
         {
-            string query = "SELECT ClassTaught, NumberOfSessions, TotalAmount FROM Claims WHERE ClaimID = @ClaimID";
+            string query = "SELECT ClassTaught, NoOfSessions FROM Claims WHERE ClaimsID = @ClaimsID";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(query, connection);
-                command.Parameters.AddWithValue("@ClaimID", claimID);
+                command.Parameters.AddWithValue("@ClaimsID", claimID);
 
                 try
                 {
@@ -36,18 +35,17 @@ namespace Saadiq_Jattiem_POE
                     if (reader.Read())
                     {
                         ClassTaughtTextBox.Text = reader["ClassTaught"].ToString();
-                        NumberOfSessionsTextBox.Text = reader["NumberOfSessions"].ToString();
-                        TotalAmountTextBox.Text = reader["TotalAmount"].ToString();
+                        NumberOfSessionsTextBox.Text = reader["NoOfSessions"].ToString();
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error: " + ex.Message);
+                    MessageBox.Show("Error loading claim details: " + ex.Message);
                 }
             }
         }
 
-        //method to capture the amount of sessions the user has
+        // Update the total amount whenever the number of sessions changes
         public void NumberOfSessionsTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
             if (int.TryParse(NumberOfSessionsTextBox.Text, out int numberOfSessions))
@@ -60,37 +58,34 @@ namespace Saadiq_Jattiem_POE
                 TotalAmountTextBox.Text = "0.00"; // Reset if input is invalid
             }
         }
-        //once the save button is clicked it will save data and update the total amount for that course
+
+        // Save button click handler
         public void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             string classTaught = ClassTaughtTextBox.Text;
-            int numberOfSessions;
-            decimal totalAmount;
-
-            if (int.TryParse(NumberOfSessionsTextBox.Text, out numberOfSessions) &&
-                decimal.TryParse(TotalAmountTextBox.Text, out totalAmount))
+            if (int.TryParse(NumberOfSessionsTextBox.Text, out int numberOfSessions))
             {
-                UpdateClaim(classTaught, numberOfSessions, totalAmount);
+                UpdateClaim(classTaught, numberOfSessions);
                 MessageBox.Show("Claim updated successfully!");
                 Close();
             }
             else
             {
-                MessageBox.Show("Invalid input for number of sessions or total amount.");
+                MessageBox.Show("Invalid input for number of sessions.");
             }
         }
-        //this method will update the claim in the database
-        public void UpdateClaim(string classTaught, int numberOfSessions, decimal totalAmount)
+
+        // Update the claim in the database
+        public void UpdateClaim(string classTaught, int numberOfSessions)
         {
-            string query = "UPDATE Claims SET ClassTaught = @ClassTaught, NumberOfSessions = @NumberOfSessions, TotalAmount = @TotalAmount WHERE ClaimID = @ClaimID";
+            string query = "UPDATE Claims SET ClassTaught = @ClassTaught, NoOfSessions = @NoOfSessions WHERE ClaimsID = @ClaimsID";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@ClassTaught", classTaught);
-                command.Parameters.AddWithValue("@NumberOfSessions", numberOfSessions);
-                command.Parameters.AddWithValue("@TotalAmount", totalAmount);
-                command.Parameters.AddWithValue("@ClaimID", claimID);
+                command.Parameters.AddWithValue("@NoOfSessions", numberOfSessions);
+                command.Parameters.AddWithValue("@ClaimsID", claimID);
 
                 try
                 {
@@ -99,7 +94,7 @@ namespace Saadiq_Jattiem_POE
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error: " + ex.Message);
+                    MessageBox.Show("Error updating claim: " + ex.Message);
                 }
             }
         }

@@ -8,7 +8,7 @@ namespace Saadiq_Jattiem_POE
     public partial class LecturerInfoWindow : Window
     {
         //connection to database
-        private readonly string connectionString = "Data Source=labg9aeb3\\sqlexpress01;Initial Catalog=POE;Integrated Security=True;Encrypt=True;Trust Server Certificate=True";
+        private readonly string connectionString = "Data Source=labg9aeb3\\sqlexpress01;Initial Catalog=POE_2;Integrated Security=True;TrustServerCertificate=True;";
         private readonly string firstName;
         private readonly string lastName;
         //connection to database and loading the lecturer data

@@ -1,22 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using Microsoft.Data.Sql;
+
 namespace Saadiq_Jattiem_POE
 {
     /// <summary>
-    /// Interaction logic for LecturerLogin.xaml
+    /// Handles Lecturer login and redirects them to the dashboard upon successful login.
     /// </summary>
     public partial class LecturerLogin : Window
     {
@@ -25,62 +16,92 @@ namespace Saadiq_Jattiem_POE
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Handles the Sign-In button click event.
+        /// </summary>
         private void SignInButton_Click(object sender, RoutedEventArgs e)
         {
-            // Get the user's input from the form fields
+            // Retrieve email and password from input fields
             string email = EmailTextBox.Text.Trim();
             string password = PasswordBox.Password.Trim();
 
-            // Validate that both fields are filled out
+            // Validate input
             if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
             {
-                MessageBox.Show("Please enter both email and password.");
+                MessageBox.Show("Please enter both email and password.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             try
             {
-                // SQL connection string to  database
-                string connectionString = "Data Source=labg9aeb3\\sqlexpress01;Initial Catalog=POE;Integrated Security=True;Encrypt=True;Trust Server Certificate=True";
+                // Hash the entered password using the same method as account creation
+                string hashedPassword = HashPassword(password);
 
+                // Connection string to the database
+                string connectionString = "Data Source=labg9aeb3\\sqlexpress01;Initial Catalog=POE_2;Integrated Security=True;TrustServerCertificate=True;";
+
+                // Open database connection
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
 
-                    // SQL query to check if the email and password hash match an entry in the AccountUser table
-                    string query = "SELECT COUNT(*) FROM AccountUser WHERE Email = @Email AND PasswordHash = @PasswordHash AND AccountType = 'Lecturer'";
+                    // SQL query to validate Lecturer login
+                    string query = @"
+                        SELECT COUNT(*) 
+                        FROM AccountUser 
+                        WHERE Email = @Email 
+                          AND PasswordHash = @PasswordHash 
+                          AND AccountType = 'Lecturer'";
 
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
-                        // Use SQL parameters to prevent SQL injection attacks
+                        // Add parameters to prevent SQL injection
                         command.Parameters.AddWithValue("@Email", email);
-                        command.Parameters.AddWithValue("@PasswordHash", password);  // Assuming password is stored as plain text (it should be hashed)
+                        command.Parameters.AddWithValue("@PasswordHash", hashedPassword);  // Compare hashed passwords
 
-                        // Execute the query and get the number of matching entries
+                        // Execute the query and check the result
                         int count = (int)command.ExecuteScalar();
 
-                        // Check if any entries were found
                         if (count > 0)
                         {
-                            MessageBox.Show("Lecturer logged in successfully.");
+                            MessageBox.Show("Lecturer logged in successfully.", "Login Successful", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                            // Open the Lecturer Dashboard window and close the login window
+                            // Redirect to the Lecturer Dashboard and close the login window
                             LecturerDashboard lecturerDashboard = new LecturerDashboard();
                             lecturerDashboard.Show();
-                            this.Close();  // Close the login window
+                            this.Close();
                         }
                         else
                         {
-                            // No matching entries were found
-                            MessageBox.Show("Invalid email or password.");
+                            MessageBox.Show("Invalid email or password. Please try again.", "Login Failed", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }
                 }
             }
+            catch (SqlException sqlEx)
+            {
+                MessageBox.Show($"Database connection error: {sqlEx.Message}", "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
             catch (Exception ex)
             {
-                // Handle any exceptions that occur during the process
-                MessageBox.Show("Error: " + ex.Message);
+                MessageBox.Show($"An unexpected error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        /// <summary>
+        /// Hashes a password using SHA256.
+        /// </summary>
+        private string HashPassword(string password)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                StringBuilder builder = new StringBuilder();
+                foreach (byte b in bytes)
+                {
+                    builder.Append(b.ToString("x2"));
+                }
+                return builder.ToString();
             }
         }
     }

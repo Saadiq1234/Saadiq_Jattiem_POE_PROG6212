@@ -60,7 +60,7 @@ namespace Saadiq_Jattiem_POE
         // Method to get the claim ID based on the class name
         private int GetClaimIDByClass(string classTaught)
         {
-            string connectionString = "Data Source=labg9aeb3\\sqlexpress01;Initial Catalog=POE;Integrated Security=True;Encrypt=True;Trust Server Certificate=True";
+            string connectionString = "Data Source=labg9aeb3\\sqlexpress01;Initial Catalog=POE_2;Integrated Security=True;";
             string query = "SELECT ClaimID FROM Claims WHERE ClassTaught = @ClassTaught";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -88,7 +88,7 @@ namespace Saadiq_Jattiem_POE
         // Method to save the supporting document to the database and update Claims table
         private void SaveSupportingDocument(int claimID, string documentPath)
         {
-            string connectionString = "Data Source=hp820g4\\SQLEXPRESS;Initial Catalog=POE;Integrated Security=True;";
+            string connectionString = "Data Source=labg9aeb3\\sqlexpress01;Initial Catalog=POE_2;Integrated Security=True;TrustServerCertificate=True;";
 
             // Insert into SupportingDocuments table
             string insertQuery = @"INSERT INTO SupportingDocuments (ClaimsID, DocName, FilePath, SubmissionDate)

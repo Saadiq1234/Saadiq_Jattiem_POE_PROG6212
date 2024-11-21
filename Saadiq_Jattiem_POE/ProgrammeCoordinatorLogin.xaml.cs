@@ -1,23 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using Saadiq_Jattiem_POE;
 
 namespace Saadiq_Jattiem_POE
 {
     /// <summary>
-    /// When coordinators are approved for login they will be taken to coordinator dashboard
+    /// Handles login for Programme Coordinators and redirects them to the dashboard upon successful login.
     /// </summary>
     public partial class ProgrammeCoordinatorLogin : Window
     {
@@ -26,59 +16,92 @@ namespace Saadiq_Jattiem_POE
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Handles the Sign-In button click event.
+        /// </summary>
         private void SignInButton_Click(object sender, RoutedEventArgs e)
         {
-            // Get email and password from the form
+            // Retrieve email and password from user input
             string email = EmailTextBox.Text.Trim();
             string password = PasswordBox.Password.Trim();
 
             // Validate input
             if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
             {
-                MessageBox.Show("Please enter both email and password.");
+                MessageBox.Show("Please enter both email and password.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             try
             {
+                // Hash the entered password using the same hashing method as account creation
+                string hashedPassword = HashPassword(password);
+
                 // Connection string to the database
-                string connectionString = "Data Source=labg9aeb3\\sqlexpress01;Initial Catalog=POE;Integrated Security=True;Encrypt=True;Trust Server Certificate=True";
+                string connectionString = "Data Source=labg9aeb3\\sqlexpress01;Initial Catalog=POE_2;Integrated Security=True;TrustServerCertificate=True;";
+
+                // Open database connection
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    // Open connection
                     connection.Open();
 
-                    // SQL query to check if the user exists and is a Programme Coordinator
-                    string query = "SELECT COUNT(*) FROM AccountUser WHERE Email = @Email AND PasswordHash = @PasswordHash AND AccountType = 'Programme Coordinator/Academic Manager'";
+                    // SQL query to validate Programme Coordinator login
+                    string query = @"
+                        SELECT COUNT(*) 
+                        FROM AccountUser 
+                        WHERE Email = @Email 
+                          AND PasswordHash = @PasswordHash 
+                          AND AccountType = 'Programme Coordinator/Academic Manager'";
+
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
-                        // Add parameters for the email and password
+                        // Add parameters for security
                         command.Parameters.AddWithValue("@Email", email);
-                        command.Parameters.AddWithValue("@PasswordHash", password);  // Password should be hashed in a real app
+                        command.Parameters.AddWithValue("@PasswordHash", hashedPassword);
 
-                        // Execute the query
+                        // Execute the query and check the result
                         int count = (int)command.ExecuteScalar();
 
-                        // If the credentials match a Programme Coordinator, redirect to the dashboard
                         if (count > 0)
                         {
-                            MessageBox.Show("Programme Coordinator logged in successfully.");
+                            MessageBox.Show("Programme Coordinator logged in successfully.", "Login Successful", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                            // Redirect to ProgrammeCoordinatorDashboard window and close the login window
-                            ProgrammeCoordinatorDashboard coordinatorDashboard = new ProgrammeCoordinatorDashboard();
-                            coordinatorDashboard.Show();
-                            this.Close();  // Close the login window
+                            // Redirect to ProgrammeCoordinatorDashboard and close the current window
+                            ProgrammeCoordinatorDashboard dashboard = new ProgrammeCoordinatorDashboard();
+                            dashboard.Show();
+                            this.Close();
                         }
                         else
                         {
-                            MessageBox.Show("Invalid email or password.");
+                            MessageBox.Show("Invalid email or password. Please try again.", "Login Failed", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }
                 }
             }
+            catch (SqlException sqlEx)
+            {
+                MessageBox.Show($"Database connection error: {sqlEx.Message}", "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message);
+                MessageBox.Show($"An unexpected error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        /// <summary>
+        /// Hashes a password using SHA256.
+        /// </summary>
+        private string HashPassword(string password)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                StringBuilder builder = new StringBuilder();
+                foreach (byte b in bytes)
+                {
+                    builder.Append(b.ToString("x2"));
+                }
+                return builder.ToString();
             }
         }
     }

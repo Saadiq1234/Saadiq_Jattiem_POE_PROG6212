@@ -22,7 +22,7 @@ namespace Saadiq_Jattiem_POE
     /// </summary>
     public partial class ViewClaims : Window
     {
-        private string connectionString = "Data Source=labg9aeb3\\sqlexpress01;Initial Catalog=POE;Integrated Security=True;Encrypt=True;Trust Server Certificate=True";
+        private string connectionString = "Data Source=labg9aeb3\\sqlexpress01;Initial Catalog=POE_2;Integrated Security=True;TrustServerCertificate=True;";
 
         public ViewClaims()
         {
@@ -33,7 +33,7 @@ namespace Saadiq_Jattiem_POE
         // Method to load claims into the ListView
         private void LoadClaims()
         {
-            string query = "SELECT ClaimID, ClassTaught, TotalAmount, ClaimStatus FROM Claims"; // Modify if necessary
+            string query = "SELECT ClaimsID AS ClaimID, ClassTaught, ClaimTotalAmount AS TotalAmount, ClaimStatus FROM Claims"; // Use correct column names
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -43,6 +43,7 @@ namespace Saadiq_Jattiem_POE
                 ClaimsListView.ItemsSource = dataTable.DefaultView; // Set the data source for the ListView
             }
         }
+
 
         // Event handler for editing a claim
         private void EditClaim_Click(object sender, RoutedEventArgs e)

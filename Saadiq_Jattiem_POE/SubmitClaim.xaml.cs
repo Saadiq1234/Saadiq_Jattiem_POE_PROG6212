@@ -102,10 +102,11 @@ namespace Saadiq_Jattiem_POE
         // Method to save claim details to the database
         private void SaveClaimToDatabase(string classTaught, int sessions, double hourlyRate, double totalAmount, string documentPath)
         {
-            string connectionString = "Data Source=labg9aeb3\\sqlexpress01;Initial Catalog=POE;Integrated Security=True;Encrypt=True;Trust Server Certificate=True";
+            string connectionString = "Data Source=labg9aeb3\\sqlexpress01;Initial Catalog=POE_2;Integrated Security=True;TrustServerCertificate=True;";
 
-            string query = @"INSERT INTO Claims (ClassTaught, NoOfSessions, HourlyRate, TotalAmount, SupportingDocumentPath)
-                             VALUES (@ClassTaught, @NumberOfSessions, @HourlyRate, @TotalAmount, @DocumentPath)";
+            // Insert the claim into the Claims table
+            string query = @"INSERT INTO Claims (ClassTaught, NoOfSessions, HourlyRatePerSession, SupportingDocumentPath, ClaimStatus)
+                     VALUES (@ClassTaught, @NumberOfSessions, @HourlyRate, @DocumentPath, @ClaimStatus)";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -113,8 +114,8 @@ namespace Saadiq_Jattiem_POE
                 command.Parameters.AddWithValue("@ClassTaught", classTaught);
                 command.Parameters.AddWithValue("@NumberOfSessions", sessions);
                 command.Parameters.AddWithValue("@HourlyRate", hourlyRate);
-                command.Parameters.AddWithValue("@TotalAmount", totalAmount);
-                command.Parameters.AddWithValue("@DocumentPath", documentPath); // Store file path
+                command.Parameters.AddWithValue("@DocumentPath", documentPath);
+                command.Parameters.AddWithValue("@ClaimStatus", "Waiting"); // Set status to "WAITING"
 
                 try
                 {

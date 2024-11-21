@@ -49,7 +49,8 @@ namespace Saadiq_Jattiem_POE
                 string passwordHash = HashPassword(password);
 
                 // Database connection string
-                string connectionString = "Data Source=hp820g4\\SQLEXPRESS;Initial Catalog=POE;Integrated Security=True;";
+                string connectionString = "Data Source=labg9aeb3\\sqlexpress01;Initial Catalog=POE_2;Integrated Security=True;TrustServerCertificate=True;";
+
 
                 // Insert user data into the database
                 using (SqlConnection con = new SqlConnection(connectionString))
