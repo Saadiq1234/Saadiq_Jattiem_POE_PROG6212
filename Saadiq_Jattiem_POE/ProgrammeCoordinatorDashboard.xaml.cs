@@ -27,7 +27,7 @@ namespace Saadiq_Jattiem_POE
         private List<Claim> GetClaimsFromDatabase()
         {
             List<Claim> claims = new List<Claim>();
-            string connectionString = "Data Source=hp820g4\\SQLEXPRESS;Initial Catalog=POE;Integrated Security=True;";
+            string connectionString = "Data Source=labg9aeb3\\sqlexpress01;Initial Catalog=POE;Integrated Security=True;Encrypt=True;Trust Server Certificate=True";
             string query = "SELECT ClaimID, ClassTaught, TotalAmount, ClaimStatus, NumberOfSessions FROM Claims";
             // Connect to the database and retrieve the claims
             using (SqlConnection connection = new SqlConnection(connectionString))

@@ -12,7 +12,7 @@ namespace Saadiq_Jattiem_POE
     /// </summary>
     public partial class LecturerDashboard : Window
     {
-        private string connectionString = "Data Source=hp820g4\\SQLEXPRESS;Initial Catalog=POE;Integrated Security=True;";
+        private string connectionString = "Data Source=labg9aeb3\\sqlexpress01;Initial Catalog=POE;Integrated Security=True;Encrypt=True;Trust Server Certificate=True";
         private DispatcherTimer timer;
 
         public LecturerDashboard()

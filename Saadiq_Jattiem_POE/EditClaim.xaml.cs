@@ -8,7 +8,7 @@ namespace Saadiq_Jattiem_POE
     public partial class EditClaim : Window
     {
         //connect to the database
-        public string connectionString = "Data Source=hp820g4\\SQLEXPRESS;Initial Catalog=POE;Integrated Security=True;";
+        public string connectionString = "Data Source=labg9aeb3\\sqlexpress01;Initial Catalog=POE;Integrated Security=True;Encrypt=True;Trust Server Certificate=True";
         public int claimID;
         public decimal sessionCost = 105; // Example cost per session
 

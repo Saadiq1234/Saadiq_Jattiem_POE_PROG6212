@@ -1,0 +1,24 @@
+﻿<Window x:Class="Saadiq_Jattiem_POE.ViewClaims"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Saadiq_Jattiem_POE"
+        mc:Ignorable="d"
+        Title="ViewClaims" Height="450" Width="800">
+    <Grid Background="#FF579ED4">
+        <ListView x:Name="ClaimsListView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20,20,20,60">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Claim ID" Width="80" DisplayMemberBinding="{Binding ClaimID}"/>
+                    <GridViewColumn Header="Class Taught" Width="200" DisplayMemberBinding="{Binding ClassTaught}"/>
+                    <GridViewColumn Header="Total Amount" Width="100" DisplayMemberBinding="{Binding TotalAmount}"/>
+                    <GridViewColumn Header="Claim Status" Width="100" DisplayMemberBinding="{Binding ClaimStatus}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <Button Content="Edit Claim" Width="100" Height="30" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="20,0,0,20" Click="EditClaim_Click"/>
+        <Button Content="Delete Claim" Width="100" Height="30" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,20,20" Click="DeleteClaim_Click"/>
+    </Grid>
+</Window>

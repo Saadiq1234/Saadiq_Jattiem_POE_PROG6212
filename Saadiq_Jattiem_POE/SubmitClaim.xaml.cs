@@ -102,9 +102,9 @@ namespace Saadiq_Jattiem_POE
         // Method to save claim details to the database
         private void SaveClaimToDatabase(string classTaught, int sessions, double hourlyRate, double totalAmount, string documentPath)
         {
-            string connectionString = "Data Source=hp820g4\\SQLEXPRESS;Initial Catalog=POE;Integrated Security=True;";
+            string connectionString = "Data Source=labg9aeb3\\sqlexpress01;Initial Catalog=POE;Integrated Security=True;Encrypt=True;Trust Server Certificate=True";
 
-            string query = @"INSERT INTO Claims (ClassTaught, NumberOfSessions, HourlyRate, TotalAmount, SupportingDocumentPath)
+            string query = @"INSERT INTO Claims (ClassTaught, NoOfSessions, HourlyRate, TotalAmount, SupportingDocumentPath)
                              VALUES (@ClassTaught, @NumberOfSessions, @HourlyRate, @TotalAmount, @DocumentPath)";
 
             using (SqlConnection connection = new SqlConnection(connectionString))

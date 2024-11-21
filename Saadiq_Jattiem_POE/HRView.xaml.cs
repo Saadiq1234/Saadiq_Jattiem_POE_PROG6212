@@ -10,7 +10,7 @@ namespace Saadiq_Jattiem_POE
 {
     public partial class HRView : Window
     {//connect to database
-        private readonly string connectionString = "Data Source=hp820g4\\SQLEXPRESS;Initial Catalog=POE;Integrated Security=True;";
+        private readonly string connectionString = "Data Source=labg9aeb3\\sqlexpress01;Initial Catalog=POE;Integrated Security=True;Encrypt=True;Trust Server Certificate=True";
 
         public HRView()
         {

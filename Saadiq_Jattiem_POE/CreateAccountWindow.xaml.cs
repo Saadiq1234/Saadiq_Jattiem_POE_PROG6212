@@ -1,14 +1,14 @@
-﻿using System.Windows;
-using System;
+﻿using System;
 using System.Data.SqlClient;
+using System.Security.Cryptography;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-
 
 namespace Saadiq_Jattiem_POE
 {
     /// <summary>
-    /// This window allows for users to create their account and have it stored into the database
+    /// This window allows users to create their account and store it in the database.
     /// </summary>
     public partial class CreateAccountWindow : Window
     {
@@ -17,18 +17,18 @@ namespace Saadiq_Jattiem_POE
             InitializeComponent();
         }
 
-        //This method is called when the Create Account button is clicked and will save the users information (name,surname,email etc.) into the database once the button is clicked.
+        // This method is called when the Create Account button is clicked.
         public void CreateAccountButton_Click(object sender, RoutedEventArgs e)
         {
-            // Get the values from the form
+            // Retrieve values from input fields
             string role = (RoleComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
             string firstName = FirstNameTextBox.Text.Trim();
             string lastName = LastNameTextBox.Text.Trim();
             string email = EmailTextBox.Text.Trim();
-            string password = PasswordBox.Password.Trim();  // This should be hashed in a real system!
+            string password = PasswordBox.Password.Trim();
             string phoneNumber = PhoneNumberTextBox.Text.Trim();
 
-            // Validate form input
+            // Validate inputs
             if (string.IsNullOrWhiteSpace(role) || string.IsNullOrWhiteSpace(firstName) ||
                 string.IsNullOrWhiteSpace(lastName) || string.IsNullOrWhiteSpace(email) ||
                 string.IsNullOrWhiteSpace(password) || string.IsNullOrWhiteSpace(phoneNumber))
@@ -37,38 +37,38 @@ namespace Saadiq_Jattiem_POE
                 return;
             }
 
+            if (!int.TryParse(phoneNumber, out int phoneNumberInt))
+            {
+                MessageBox.Show("Phone Number must contain only digits.");
+                return;
+            }
+
             try
             {
-                // Address of SQL server and database 
+                // Hash the password using SHA256
+                string passwordHash = HashPassword(password);
+
+                // Database connection string
                 string connectionString = "Data Source=hp820g4\\SQLEXPRESS;Initial Catalog=POE;Integrated Security=True;";
 
-                // Establish connection
+                // Insert user data into the database
                 using (SqlConnection con = new SqlConnection(connectionString))
                 {
-                    // Open Connection
                     con.Open();
-
-
-                    string passwordHash = password;
-
-                    // SQL Query with all required fields, including email
                     string query = "INSERT INTO AccountUser (FirstName, LastName, Email, PhoneNumber, PasswordHash, AccountType) " +
                                    "VALUES (@FirstName, @LastName, @Email, @PhoneNumber, @PasswordHash, @AccountType)";
 
-                    // Execute query with parameters
                     using (SqlCommand cmd = new SqlCommand(query, con))
                     {
                         cmd.Parameters.AddWithValue("@FirstName", firstName);
                         cmd.Parameters.AddWithValue("@LastName", lastName);
-                        cmd.Parameters.AddWithValue("@Email", email);  // Add the email parameter
-                        cmd.Parameters.AddWithValue("@PhoneNumber", phoneNumber);
+                        cmd.Parameters.AddWithValue("@Email", email);
+                        cmd.Parameters.AddWithValue("@PhoneNumber", phoneNumberInt); // Cast to INT
                         cmd.Parameters.AddWithValue("@PasswordHash", passwordHash);
                         cmd.Parameters.AddWithValue("@AccountType", role);
 
                         cmd.ExecuteNonQuery();
                     }
-
-                    // Close Connection
                     con.Close();
                 }
 
@@ -81,6 +81,21 @@ namespace Saadiq_Jattiem_POE
             catch (Exception ex)
             {
                 MessageBox.Show("An error occurred: " + ex.Message);
+            }
+        }
+
+        // Function to hash passwords using SHA256
+        private string HashPassword(string password)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                StringBuilder builder = new StringBuilder();
+                foreach (byte b in bytes)
+                {
+                    builder.Append(b.ToString("x2"));
+                }
+                return builder.ToString();
             }
         }
     }
