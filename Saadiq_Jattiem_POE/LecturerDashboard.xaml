@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Saadiq_Jattiem_POE"
         mc:Ignorable="d"
         Title="LecturerDashboard" Height="450" Width="800">
-    <Grid Background="#FF579ED4">
+    <Grid Background="Aquamarine">
         <!--Once a lecturer is logged in this is the window they will be directed to, where they can submit claims, upload documents and view claims/status-->
         <Button Content="Submit Claim" Width="200" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,20,0,0" Click="SubmitClaim_Click"/>
         <Button Content="Upload Supporting Documents" Width="250" Height="40" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,80,0,0" Click="Button_Click"/>

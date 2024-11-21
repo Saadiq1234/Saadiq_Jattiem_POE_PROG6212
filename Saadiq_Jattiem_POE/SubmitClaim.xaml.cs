@@ -59,6 +59,7 @@ namespace Saadiq_Jattiem_POE
         }
 
         // Event for submitting the claim
+        // Event for submitting the claim
         private void SubmitButton_Click(object sender, RoutedEventArgs e)
         {
             string classTaught = ClassTaughtTextBox.Text;
@@ -95,10 +96,15 @@ namespace Saadiq_Jattiem_POE
             // Save the claim to the database
             SaveClaimToDatabase(classTaught, numberOfSessions, hourlyRate, totalAmount, uploadedFilePath);
 
+            // Display the status of the claim (set to "Waiting")
+            ClaimStatusTextBlock.Text = "Claim Status: Waiting"; // Assuming you have a TextBlock named ClaimStatusTextBlock
+
             // Clear the form after successful submission
             ClearForm();
         }
 
+
+        // Method to save claim details to the database
         // Method to save claim details to the database
         private void SaveClaimToDatabase(string classTaught, int sessions, double hourlyRate, double totalAmount, string documentPath)
         {
@@ -106,7 +112,7 @@ namespace Saadiq_Jattiem_POE
 
             // Insert the claim into the Claims table
             string query = @"INSERT INTO Claims (ClassTaught, NoOfSessions, HourlyRatePerSession, SupportingDocumentPath, ClaimStatus)
-                     VALUES (@ClassTaught, @NumberOfSessions, @HourlyRate, @DocumentPath, @ClaimStatus)";
+             VALUES (@ClassTaught, @NumberOfSessions, @HourlyRate, @DocumentPath, @ClaimStatus)";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -115,7 +121,7 @@ namespace Saadiq_Jattiem_POE
                 command.Parameters.AddWithValue("@NumberOfSessions", sessions);
                 command.Parameters.AddWithValue("@HourlyRate", hourlyRate);
                 command.Parameters.AddWithValue("@DocumentPath", documentPath);
-                command.Parameters.AddWithValue("@ClaimStatus", "Waiting"); // Set status to "WAITING"
+                command.Parameters.AddWithValue("@ClaimStatus", "Pending"); // Set status to "WAITING"
 
                 try
                 {
@@ -129,6 +135,7 @@ namespace Saadiq_Jattiem_POE
                 }
             }
         }
+
 
         // Event for clearing the form (Cancel)
         private void CancelButton_Click(object sender, RoutedEventArgs e)

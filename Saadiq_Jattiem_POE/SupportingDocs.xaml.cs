@@ -61,7 +61,7 @@ namespace Saadiq_Jattiem_POE
         private int GetClaimIDByClass(string classTaught)
         {
             string connectionString = "Data Source=labg9aeb3\\sqlexpress01;Initial Catalog=POE_2;Integrated Security=True;";
-            string query = "SELECT ClaimID FROM Claims WHERE ClassTaught = @ClassTaught";
+            string query = "SELECT ClaimsID FROM Claims WHERE ClassTaught = @ClassTaught";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -97,7 +97,7 @@ namespace Saadiq_Jattiem_POE
             // Update the Claims table to reflect the new document path
             string updateQuery = @"UPDATE Claims
                                    SET SupportingDocumentPath = @FilePath
-                                   WHERE ClaimID = @ClaimID";
+                                   WHERE ClaimsID = @ClaimID";  // Corrected ClaimsID column name
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -107,7 +107,7 @@ namespace Saadiq_Jattiem_POE
 
                     // First, insert the document into SupportingDocuments
                     SqlCommand insertCommand = new SqlCommand(insertQuery, connection);
-                    insertCommand.Parameters.AddWithValue("@ClaimID", claimID);
+                    insertCommand.Parameters.AddWithValue("@ClaimID", claimID);  // Corrected ClaimsID
                     insertCommand.Parameters.AddWithValue("@DocName", Path.GetFileName(documentPath));
                     insertCommand.Parameters.AddWithValue("@FilePath", documentPath);
                     insertCommand.Parameters.AddWithValue("@SubmissionDate", DateTime.Now);
@@ -115,7 +115,7 @@ namespace Saadiq_Jattiem_POE
 
                     // Then, update the Claims table to save the document path
                     SqlCommand updateCommand = new SqlCommand(updateQuery, connection);
-                    updateCommand.Parameters.AddWithValue("@ClaimID", claimID);
+                    updateCommand.Parameters.AddWithValue("@ClaimID", claimID);  // Corrected ClaimsID
                     updateCommand.Parameters.AddWithValue("@FilePath", documentPath);
                     updateCommand.ExecuteNonQuery();
 

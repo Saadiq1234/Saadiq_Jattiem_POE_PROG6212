@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Saadiq_Jattiem_POE"
         mc:Ignorable="d"
         Title="EditClaim" Height="450" Width="800">
-    <Grid Background="#FF579ED4">
+    <Grid Background="Aquamarine">
         <!---This window will allow lecturers to edit the details of their claims and save it-->
         <TextBlock Text="Class Taught:" Margin="10" VerticalAlignment="Top" FontSize="14" FontWeight="Bold" />
         <TextBox x:Name="ClassTaughtTextBox" Margin="10,30,10,0" VerticalAlignment="Top" Height="25"/>

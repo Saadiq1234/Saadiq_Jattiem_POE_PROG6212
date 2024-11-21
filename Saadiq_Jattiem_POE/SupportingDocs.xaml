@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Saadiq_Jattiem_POE"
         mc:Ignorable="d"
         Title="SupportingDocs" Height="450" Width="800">
-    <Grid Background="#FF579ED4">
+    <Grid Background="Aquamarine">
         <!-- Class taught label and text box -->
         <TextBlock Text="Class Taught:" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,40,0,0"/>
         <TextBox x:Name="ClassTaughtTextBox" Width="300" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="120,40,0,0"/>

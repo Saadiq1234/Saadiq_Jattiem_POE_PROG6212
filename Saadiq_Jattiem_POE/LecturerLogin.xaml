@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Saadiq_Jattiem_POE"
         mc:Ignorable="d"
         Title="LecturerLogin" Height="450" Width="800">
-    <Grid Background="#FF579ED4">
+    <Grid Background="Aquamarine">
         <!---Allows the lecturer to login if their information is stored in the database-->
         <TextBlock Text="Lecturer Login" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0"/>
 

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Saadiq_Jattiem_POE"
         mc:Ignorable="d"
         Title="ViewClaims" Height="450" Width="800">
-    <Grid Background="#FF579ED4">
+    <Grid Background="Aquamarine">
         <ListView x:Name="ClaimsListView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20,20,20,60">
             <ListView.View>
                 <GridView>

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Saadiq_Jattiem_POE"
         mc:Ignorable="d"
         Title="SubmitClaim" Height="450" Width="800">
-    <Grid Background="#FF579ED4">
+    <Grid Background="Aquamarine">
         <!--Lecturers can upload their information for submission of their claims-->
         <!-- Class taught label and text box -->
         <TextBlock Text="Class Taught:" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,40,0,0"/>
@@ -23,6 +23,7 @@
         <!-- Total claim amount label and text block -->
         <TextBlock Text="Total Claim Amount:" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,190,0,0"/>
         <TextBlock x:Name="TotalAmountTextBlock" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="150,190,0,0" Width="100"/>
+        <TextBlock Name="ClaimStatusTextBlock" Text="Claim Status: Waiting" Margin="10" VerticalAlignment="Top"/>
 
         <!-- Document upload -->
         <TextBlock Text="Supporting Documents:" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20,222,0,0"/>

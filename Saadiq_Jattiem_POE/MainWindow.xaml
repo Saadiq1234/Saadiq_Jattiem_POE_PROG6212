@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Saadiq_Jattiem_POE"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid Background="#FF579ED4">
+    <Grid Background="Aquamarine">
         <!--First window that users will interact with-->
         <TextBlock TextWrapping="Wrap" FontSize="16" Margin="20,20,20,10">
     Welcome to Rosebank College Contract Monthly Claims System. This system is designed to help you manage your monthly claims for the contract you are working on. 

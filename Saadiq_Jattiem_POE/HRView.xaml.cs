@@ -9,7 +9,7 @@ using Microsoft.Win32;
 namespace Saadiq_Jattiem_POE
 {
     public partial class HRView : Window
-    {
+    {//connect to database
         private readonly string connectionString = "Data Source=labg9aeb3\\sqlexpress01;Initial Catalog=POE_2;Integrated Security=True;TrustServerCertificate=True;";
 
         public HRView()
@@ -17,8 +17,7 @@ namespace Saadiq_Jattiem_POE
             InitializeComponent();
             LoadClaimsData();
         }
-
-        // Load and display claims in the database
+        //load and display claims in the database
         private void LoadClaimsData()
         {
             try
@@ -26,7 +25,7 @@ namespace Saadiq_Jattiem_POE
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    string query = "SELECT ClaimsID, ClassTaught, NoOfSessions, HourlyRatePerSession, ClaimTotalAmount, ClaimStatus FROM Claims"; // Fixed column names
+                    string query = "SELECT ClaimsID, ClassTaught, NoOfSessions, HourlyRatePerSession, ClaimTotalAmount, ClaimStatus FROM Claims";
                     SqlDataAdapter adapter = new SqlDataAdapter(query, conn);
                     DataTable dataTable = new DataTable();
                     adapter.Fill(dataTable);
@@ -38,8 +37,7 @@ namespace Saadiq_Jattiem_POE
                 MessageBox.Show($"Error loading claims data: {ex.Message}");
             }
         }
-
-        // Generates report for approved claims and displays it in a message box
+        //generates report for approved claims and displays it in a message box
         private void GenerateReportButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -55,9 +53,9 @@ namespace Saadiq_Jattiem_POE
                     string report = "Approved Claims Report\n\n";
                     while (reader.Read())
                     {
-                        report += $"Claim ID: {reader["ClaimsID"]}, Class Taught: {reader["ClassTaught"]}, " +
-                                  $"Number of Sessions: {reader["NoOfSessions"]}, Hourly Rate: {reader["HourlyRatePerSession"]}, " +
-                                  $"Total Amount: {reader["ClaimTotalAmount"]}, Status: {reader["ClaimStatus"]}\n"; // Fixed column names
+                        report += $"Claim ID: {reader["ClaimID"]}, Class Taught: {reader["ClassTaught"]}, " +
+                                  $"Number of Sessions: {reader["NumberOfSessions"]}, Hourly Rate: {reader["HourlyRate"]}, " +
+                                  $"Total Amount: {reader["TotalAmount"]}, Status: {reader["ClaimStatus"]}\n";
                     }
 
                     // Show the report in a message box
@@ -70,8 +68,7 @@ namespace Saadiq_Jattiem_POE
                         DefaultExt = "txt",
                         AddExtension = true
                     };
-
-                    // Save the report to a file
+                    //saves report to a file
                     if (saveFileDialog.ShowDialog() == true)
                     {
                         File.WriteAllText(saveFileDialog.FileName, report);
@@ -84,8 +81,7 @@ namespace Saadiq_Jattiem_POE
                 MessageBox.Show($"Error generating report: {ex.Message}");
             }
         }
-
-        // Searches for a lecturer and allows for their information to be updated or deleted
+        //searches for a lecturer and allows for their information to be updated or deleted
         private void SearchLecturerButton_Click(object sender, RoutedEventArgs e)
         {
             string firstName = FirstNameTextBox.Text.Trim();
@@ -100,13 +96,12 @@ namespace Saadiq_Jattiem_POE
             LecturerInfoWindow lecturerInfoWindow = new LecturerInfoWindow(firstName, lastName);
             lecturerInfoWindow.ShowDialog();
         }
-
-        // Change claim to approved
+        //change claim to approved
         private void ApproveClaimButton_Click(object sender, RoutedEventArgs e)
         {
             if (ClaimsDataGrid.SelectedItem is DataRowView selectedRow)
             {
-                int claimId = Convert.ToInt32(selectedRow["ClaimsID"]); // Fixed column name
+                int claimId = Convert.ToInt32(selectedRow["ClaimID"]);
                 UpdateClaimStatus(claimId, "Approved");
             }
             else
@@ -114,13 +109,12 @@ namespace Saadiq_Jattiem_POE
                 MessageBox.Show("Please select a claim to approve.");
             }
         }
-
-        // Delete a claim
+        //delete a claim
         private void DeleteClaimButton_Click(object sender, RoutedEventArgs e)
         {
             if (ClaimsDataGrid.SelectedItem is DataRowView selectedRow)
             {
-                int claimId = Convert.ToInt32(selectedRow["ClaimsID"]); // Fixed column name
+                int claimId = Convert.ToInt32(selectedRow["ClaimID"]);
                 if (MessageBox.Show("Are you sure you want to delete this claim?", "Confirm Delete", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     DeleteClaim(claimId);
@@ -131,8 +125,7 @@ namespace Saadiq_Jattiem_POE
                 MessageBox.Show("Please select a claim to delete.");
             }
         }
-
-        // Updates the status of a claim
+        //updates the status of a claim
         private void UpdateClaimStatus(int claimId, string newStatus)
         {
             try
@@ -140,10 +133,10 @@ namespace Saadiq_Jattiem_POE
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    string query = "UPDATE Claims SET ClaimStatus = @ClaimStatus WHERE ClaimsID = @ClaimsID"; // Fixed column name
+                    string query = "UPDATE Claims SET ClaimStatus = @ClaimStatus WHERE ClaimID = @ClaimID";
                     SqlCommand cmd = new SqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@ClaimStatus", newStatus);
-                    cmd.Parameters.AddWithValue("@ClaimsID", claimId); // Fixed column name
+                    cmd.Parameters.AddWithValue("@ClaimID", claimId);
 
                     int rowsAffected = cmd.ExecuteNonQuery();
                     if (rowsAffected > 0)
@@ -170,9 +163,9 @@ namespace Saadiq_Jattiem_POE
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    string query = "DELETE FROM Claims WHERE ClaimsID = @ClaimsID"; // Fixed column name
+                    string query = "DELETE FROM Claims WHERE ClaimID = @ClaimID";
                     SqlCommand cmd = new SqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@ClaimsID", claimId); // Fixed column name
+                    cmd.Parameters.AddWithValue("@ClaimID", claimId);
 
                     int rowsAffected = cmd.ExecuteNonQuery();
                     if (rowsAffected > 0)
@@ -191,8 +184,7 @@ namespace Saadiq_Jattiem_POE
                 MessageBox.Show($"Error deleting claim: {ex.Message}");
             }
         }
-
-        // Automation to automatically approve claims set to PENDING
+        //Automation to automatically approve of claims set to PENDING
         private async Task AutoApprovePendingClaimsAsync()
         {
             try
@@ -200,7 +192,7 @@ namespace Saadiq_Jattiem_POE
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     await conn.OpenAsync();
-                    string query = "UPDATE Claims SET ClaimStatus = 'Approved' WHERE ClaimStatus = 'PENDING'"; // Ensure status matches database values
+                    string query = "UPDATE Claims SET ClaimStatus = 'Approved' WHERE ClaimStatus = 'Pending' ";
                     SqlCommand cmd = new SqlCommand(query, conn);
                     int rowsAffected = await cmd.ExecuteNonQueryAsync();
                     if (rowsAffected > 0)
@@ -214,9 +206,7 @@ namespace Saadiq_Jattiem_POE
                 MessageBox.Show($"Error during auto-approval: {ex.Message}");
             }
         }
-
-
-        // Changes claim status to 'PROCESSING' if it is 'WAITING'
+        //CHANGES CLAIM STATUS TO PROCESSING IF IT IS WAITING
         private async void AutoUpdateButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -224,7 +214,7 @@ namespace Saadiq_Jattiem_POE
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     await conn.OpenAsync();
-                    string query = "UPDATE Claims SET ClaimStatus = 'PROCESSING' WHERE ClaimStatus = 'WAITING'"; // Change from 'Pending' to 'WAITING'
+                    string query = "UPDATE Claims SET ClaimStatus = 'PROCESSING' WHERE ClaimStatus = 'WAITING'";
                     SqlCommand cmd = new SqlCommand(query, conn);
 
                     int rowsAffected = await cmd.ExecuteNonQueryAsync();
@@ -244,9 +234,7 @@ namespace Saadiq_Jattiem_POE
                 MessageBox.Show($"Error updating claim statuses: {ex.Message}");
             }
         }
-
-
-        // Redirects back to home page
+        //REDIRECTS BACK TO HOME PAGE
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             MainWindow mainWindow = new MainWindow(); // Create a new instance of MainWindow
@@ -255,3 +243,4 @@ namespace Saadiq_Jattiem_POE
         }
     }
 }
+
