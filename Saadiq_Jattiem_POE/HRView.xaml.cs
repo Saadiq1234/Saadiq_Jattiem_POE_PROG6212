@@ -53,9 +53,10 @@ namespace Saadiq_Jattiem_POE
                     string report = "Approved Claims Report\n\n";
                     while (reader.Read())
                     {
-                        report += $"Claim ID: {reader["ClaimID"]}, Class Taught: {reader["ClassTaught"]}, " +
-                                  $"Number of Sessions: {reader["NumberOfSessions"]}, Hourly Rate: {reader["HourlyRate"]}, " +
-                                  $"Total Amount: {reader["TotalAmount"]}, Status: {reader["ClaimStatus"]}\n";
+                        report += $"Claim ID: {reader["ClaimsID"]}, Class Taught: {reader["ClassTaught"]}, " +
+           $"Number of Sessions: {reader["NoOfSessions"]}, Hourly Rate: {reader["HourlyRatePerSession"]}, " +
+           $"Total Amount: {reader["ClaimTotalAmount"]}, Status: {reader["ClaimStatus"]}\n";
+
                     }
 
                     // Show the report in a message box
@@ -101,7 +102,8 @@ namespace Saadiq_Jattiem_POE
         {
             if (ClaimsDataGrid.SelectedItem is DataRowView selectedRow)
             {
-                int claimId = Convert.ToInt32(selectedRow["ClaimID"]);
+                int claimId = Convert.ToInt32(selectedRow["ClaimsID"]);
+
                 UpdateClaimStatus(claimId, "Approved");
             }
             else
@@ -114,7 +116,7 @@ namespace Saadiq_Jattiem_POE
         {
             if (ClaimsDataGrid.SelectedItem is DataRowView selectedRow)
             {
-                int claimId = Convert.ToInt32(selectedRow["ClaimID"]);
+                int claimId = Convert.ToInt32(selectedRow["ClaimsID"]);
                 if (MessageBox.Show("Are you sure you want to delete this claim?", "Confirm Delete", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     DeleteClaim(claimId);
@@ -133,10 +135,11 @@ namespace Saadiq_Jattiem_POE
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    string query = "UPDATE Claims SET ClaimStatus = @ClaimStatus WHERE ClaimID = @ClaimID";
+                    string query = "UPDATE Claims SET ClaimStatus = @ClaimStatus WHERE ClaimsID = @ClaimsID";
+
                     SqlCommand cmd = new SqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@ClaimStatus", newStatus);
-                    cmd.Parameters.AddWithValue("@ClaimID", claimId);
+                    cmd.Parameters.AddWithValue("@ClaimsID", claimId); // Ensure the parameter is named @ClaimsID
 
                     int rowsAffected = cmd.ExecuteNonQuery();
                     if (rowsAffected > 0)
@@ -156,6 +159,7 @@ namespace Saadiq_Jattiem_POE
             }
         }
 
+
         private void DeleteClaim(int claimId)
         {
             try
@@ -163,9 +167,9 @@ namespace Saadiq_Jattiem_POE
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-                    string query = "DELETE FROM Claims WHERE ClaimID = @ClaimID";
+                    string query = "DELETE FROM Claims WHERE ClaimsID = @ClaimsID"; // Use @ClaimsID here
                     SqlCommand cmd = new SqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@ClaimID", claimId);
+                    cmd.Parameters.AddWithValue("@ClaimsID", claimId); // Ensure the parameter is named @ClaimsID
 
                     int rowsAffected = cmd.ExecuteNonQuery();
                     if (rowsAffected > 0)
@@ -184,6 +188,7 @@ namespace Saadiq_Jattiem_POE
                 MessageBox.Show($"Error deleting claim: {ex.Message}");
             }
         }
+
         //Automation to automatically approve of claims set to PENDING
         private async Task AutoApprovePendingClaimsAsync()
         {
@@ -234,6 +239,7 @@ namespace Saadiq_Jattiem_POE
                 MessageBox.Show($"Error updating claim statuses: {ex.Message}");
             }
         }
+
         //REDIRECTS BACK TO HOME PAGE
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
